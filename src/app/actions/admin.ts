@@ -16,6 +16,9 @@ export async function fetchUsers() {
       role,
       branch_id,
       full_name,
+      first_name,
+      last_name,
+      contact,
       email,
       created_at,
       branches (
@@ -129,6 +132,7 @@ export async function fetchBranches() {
   const { data, error } = await supabase
     .from('branches')
     .select('*')
+    .in('name', ['Sudan Branch', 'Uganda Branch'])
     .order('name')
   return { data, error }
 }

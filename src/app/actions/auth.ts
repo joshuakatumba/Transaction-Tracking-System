@@ -7,6 +7,7 @@ import { createClient } from '@/utils/supabase/server'
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
+  const portal = (formData.get('portal') as string) || 'user'
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -18,6 +19,34 @@ export async function login(formData: FormData) {
     return { error: error.message }
   }
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    return { error: 'Unable to verify account access.' }
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profileError || !profile) {
+    return { error: 'Unable to load profile. Please contact admin.' }
+  }
+
+  if (portal === 'admin' && profile.role !== 'admin') {
+    await supabase.auth.signOut()
+    return { error: 'Admin access only. Use the staff login page.' }
+  }
+
+  if (portal === 'user' && profile.role === 'admin') {
+    revalidatePath('/', 'layout')
+    redirect('/admin/dashboard')
+  }
+
   revalidatePath('/', 'layout')
   redirect('/')
 }
@@ -25,18 +54,24 @@ export async function login(formData: FormData) {
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
+  const firstName = formData.get('first_name') as string
+  const lastName = formData.get('last_name') as string
+  const contact = formData.get('contact') as string
   const email = formData.get('email') as string
   const password = formData.get('password') as string
-  const fullName = formData.get('full_name') as string
+  const fullName = `${firstName} ${lastName}`.trim()
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
-        full_name: fullName
-      }
-    }
+        first_name: firstName,
+        last_name: lastName,
+        full_name: fullName,
+        contact,
+      },
+    },
   })
 
   if (error) {

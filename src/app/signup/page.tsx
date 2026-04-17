@@ -28,7 +28,7 @@ export default function SignupPage() {
     <div className="center-page">
       <div className="card animate-fade-in" style={{ width: '100%', maxWidth: '400px' }}>
         <h1 className="text-center">Create Account</h1>
-        <p className="text-center mb-4">Request access to the POS system</p>
+        <p className="text-center mb-4">Sign up and wait for admin approval</p>
 
         {errorMsg && (
           <div className="mb-4 p-3 text-center text-danger" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--accent-danger)', borderRadius: '8px' }}>
@@ -38,13 +38,37 @@ export default function SignupPage() {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="full_name">Full Name</label>
+            <label className="form-label" htmlFor="first_name">First Name</label>
             <input 
               className="form-input" 
-              id="full_name" 
-              name="full_name" 
+              id="first_name" 
+              name="first_name" 
               type="text" 
-              placeholder="e.g. John Doe" 
+              placeholder="John" 
+              required 
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="last_name">Last Name</label>
+            <input 
+              className="form-input" 
+              id="last_name" 
+              name="last_name" 
+              type="text" 
+              placeholder="Doe" 
+              required 
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="contact">Contact</label>
+            <input 
+              className="form-input" 
+              id="contact" 
+              name="contact" 
+              type="text" 
+              placeholder="+256700000000" 
               required 
             />
           </div>

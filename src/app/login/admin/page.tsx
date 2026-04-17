@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { login } from '@/app/actions/auth'
 import { useState } from 'react'
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const [errorMsg, setErrorMsg] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -30,14 +30,14 @@ export default function LoginPage() {
         <div className="flex justify-between items-center mb-4">
           <div className="portal-badge">
             <span></span>
-            Staff Portal
+            Admin Portal
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>v2.4.0</div>
         </div>
-        
-        <h1 className="text-center" style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>Branch Access</h1>
-        <p className="text-center mb-4">Login for regular branch users</p>
-        
+
+        <h1 className="text-center" style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>Admin Login</h1>
+        <p className="text-center mb-4">Authorized administrators only</p>
+
         {errorMsg && (
           <div className="mb-4 p-3 text-center text-danger" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid var(--accent-danger)', borderRadius: '8px' }}>
             {errorMsg}
@@ -45,46 +45,40 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
-          <input type="hidden" name="portal" value="user" />
+          <input type="hidden" name="portal" value="admin" />
           <div className="form-group">
             <label className="form-label" htmlFor="email">Email Address</label>
-            <input 
-              className="form-input" 
-              id="email" 
-              name="email" 
-              type="email" 
-              placeholder="you@example.com" 
-              required 
+            <input
+              className="form-input"
+              id="email"
+              name="email"
+              type="email"
+              placeholder="admin@example.com"
+              required
             />
           </div>
-          
+
           <div className="form-group">
             <label className="form-label" htmlFor="password">Password</label>
-            <input 
-              className="form-input" 
-              id="password" 
-              name="password" 
-              type="password" 
-              placeholder="••••••••" 
-              required 
+            <input
+              className="form-input"
+              id="password"
+              name="password"
+              type="password"
+              placeholder="••••••••"
+              required
             />
           </div>
-          
+
           <button type="submit" className="btn btn-primary btn-block mb-3" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? 'Signing In...' : 'Sign In as Admin'}
           </button>
         </form>
-        
+
         <div className="text-center" style={{ fontSize: '0.9rem' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Don&apos;t have an account? </span>
-          <Link href="/signup" style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>
-            Sign up
-          </Link>
-        </div>
-        <div className="text-center mt-2" style={{ fontSize: '0.9rem' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Admin? </span>
-          <Link href="/login/admin" style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>
-            Login here
+          <span style={{ color: 'var(--text-secondary)' }}>Regular user? </span>
+          <Link href="/login" style={{ color: 'var(--accent-primary)', fontWeight: '600' }}>
+            Go to staff login
           </Link>
         </div>
       </div>

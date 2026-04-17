@@ -39,11 +39,16 @@ export default async function AdminUsersPage() {
                 <tr key={user.id}>
                   <td style={{ fontSize: '0.875rem' }}>
                     <div style={{ fontWeight: '600', color: 'var(--text-primary)', fontSize: '1rem' }}>
-                      {user.full_name || 'Anonymous User'}
+                      {user.full_name || `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Anonymous User'}
                     </div>
                     <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
                       {user.email}
                     </div>
+                    {user.contact && (
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>
+                        Contact: {user.contact}
+                      </div>
+                    )}
                     <div style={{ color: 'var(--text-secondary)', fontSize: '0.7rem', filter: 'opacity(0.6)' }}>
                       ID: {user.id.substring(0, 8)}...
                     </div>
@@ -69,7 +74,7 @@ export default async function AdminUsersPage() {
                       }}>
                         <select name="role" defaultValue={user.role} className="form-select" style={{ width: 'auto', minWidth: '130px' }} required>
                           <option value="pending">Pending Approval</option>
-                          <option value="branch_user">Employee</option>
+                          <option value="branch_user">Approved Branch User</option>
                         </select>
                         
                         <select name="branch_id" defaultValue={user.branch_id || ''} className="form-select" style={{ width: 'auto', minWidth: '160px' }}>

@@ -17,27 +17,15 @@ export default async function Home() {
     .eq('id', user.id)
     .single()
 
-  // --- ACCESS CONTROL LOCKDOWN ---
-  const appMode = process.env.NEXT_PUBLIC_APP_MODE // ADMIN or BRANCH
-  const targetBranchId = process.env.NEXT_PUBLIC_BRANCH_ID
-
   if (profile?.role === 'admin') {
-    // Admins can always access the Admin portal
-    if (appMode === 'ADMIN') {
-      redirect('/admin/dashboard')
-    }
-    // Optional: Allow admins to enter branch portals too
-    if (appMode === 'BRANCH') {
+    redirect('/admin/dashboard')
+  }
+
+  if (profile?.role === 'branch_user') {
+    if (profile.branch_id) {
       redirect('/branch/dashboard')
     }
-  } else if (profile?.role === 'branch_user') {
-    // Branch users MUST match the deployment's Branch ID
-    if (appMode === 'BRANCH' && profile.branch_id === targetBranchId) {
-      redirect('/branch/dashboard')
-    } else {
-      // Mismatch: Attempting to log into the wrong branch link
-      redirect('/denied')
-    }
+    redirect('/denied')
   }
 
   // If role is pending or null
@@ -46,7 +34,7 @@ export default async function Home() {
       <div className="card text-center animate-fade-in" style={{ maxWidth: '400px' }}>
         <h2 className="mb-2">Awaiting Approval</h2>
         <p className="mb-4">
-          Your account is currently pending. Custom operations are restricted until an administrator assigns you a role and branch.
+          Your details were received. Awaiting admin&apos;s access approval before you can use branch features.
         </p>
         <form action={signout}>
           <button type="submit" className="btn btn-secondary btn-block">Sign Out</button>
