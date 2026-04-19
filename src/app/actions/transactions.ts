@@ -84,8 +84,10 @@ export async function createTransaction(payload: TransactionPayload) {
     details: { transaction_id: data.id, amount: payload.amount, code, sender: payload.senderName }
   }])
 
-  revalidatePath('/branch/history')
-  revalidatePath('/branch/dashboard')
+  revalidatePath('/uganda/history')
+  revalidatePath('/uganda/dashboard')
+  revalidatePath('/sudan/history')
+  revalidatePath('/sudan/dashboard')
   
   return { data }
 }
@@ -183,8 +185,10 @@ export async function claimTransaction(transactionId: string) {
     details: { transaction_id: transactionId, code: transaction.code }
   }])
 
-  revalidatePath('/branch/history')
-  revalidatePath('/branch/dashboard')
+  revalidatePath('/uganda/history')
+  revalidatePath('/uganda/dashboard')
+  revalidatePath('/sudan/history')
+  revalidatePath('/sudan/dashboard')
 
   return { data: updatedTx }
 }

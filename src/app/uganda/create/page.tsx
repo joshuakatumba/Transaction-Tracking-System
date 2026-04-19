@@ -75,7 +75,7 @@ export default function BranchCreateTxPage() {
               <button type="button" onClick={() => setResult(null)} className="btn btn-secondary btn-print">
                 Send Another
               </button>
-              <Link href="/branch/history" className="btn btn-secondary">View History</Link>
+              <Link href="/uganda/history" className="btn btn-secondary">View History</Link>
             </div>
           </div>
         ) : (

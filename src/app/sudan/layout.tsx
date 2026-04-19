@@ -1,8 +1,9 @@
-import Link from 'next/link'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { signout } from '@/app/actions/auth'
 import { LayoutDashboard, SendHorizontal, Download, History, LogOut } from 'lucide-react'
+import NavLink from '@/utils/NavLink'
+import NotificationBell from '@/components/NotificationBell'
 
 export default async function BranchLayout({
   children,
@@ -19,7 +20,7 @@ export default async function BranchLayout({
 
   const { data: profile } = await supabase
     .from('users')
-    .select('role, branches (name)')
+    .select('role')
     .eq('id', user.id)
     .single()
 
@@ -27,9 +28,7 @@ export default async function BranchLayout({
     redirect('/')
   }
 
-  const branchName = (profile.branches as { name: string }[] | null)?.[0]?.name || 'Unknown Branch'
-
-  const branchDisplayName = process.env.NEXT_PUBLIC_BRANCH_NAME || branchName
+  const branchDisplayName = "Sudan Branch"
 
   return (
     <div className="layout-wrapper">
@@ -42,23 +41,26 @@ export default async function BranchLayout({
         </div>
 
         <nav className="sidebar-nav">
-          <Link href="/branch/dashboard" className="sidebar-link">
+          <NavLink href="/sudan/dashboard">
             <LayoutDashboard size={18} /> Dashboard
-          </Link>
-          <Link href="/branch/create" className="sidebar-link">
+          </NavLink>
+          <NavLink href="/sudan/create">
             <SendHorizontal size={18} /> Send Money
-          </Link>
-          <Link href="/branch/claim" className="sidebar-link">
+          </NavLink>
+          <NavLink href="/sudan/claim">
             <Download size={18} /> Receive Money
-          </Link>
-          <Link href="/branch/history" className="sidebar-link">
+          </NavLink>
+          <NavLink href="/sudan/history">
             <History size={18} /> History
-          </Link>
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">
-          <div className="portal-badge">
-            <span></span> Branch Portal
+          <div className="flex items-center justify-between mb-2">
+            <div className="portal-badge">
+              <span></span> Branch Portal
+            </div>
+            <NotificationBell />
           </div>
           <form action={signout}>
             <button type="submit" className="btn btn-secondary btn-block" style={{ fontSize: '0.85rem', display: 'flex', gap: '8px' }}>

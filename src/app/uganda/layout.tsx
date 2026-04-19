@@ -1,11 +1,11 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import { signout } from '@/app/actions/auth'
-import { LayoutDashboard, Users, Banknote, ScrollText, LogOut } from 'lucide-react'
+import { LayoutDashboard, SendHorizontal, Download, History, LogOut } from 'lucide-react'
 import NavLink from '@/utils/NavLink'
 import NotificationBell from '@/components/NotificationBell'
 
-export default async function AdminLayout({
+export default async function BranchLayout({
   children,
 }: {
   children: React.ReactNode
@@ -24,39 +24,41 @@ export default async function AdminLayout({
     .eq('id', user.id)
     .single()
 
-  if (profile?.role !== 'admin') {
+  if (profile?.role !== 'branch_user') {
     redirect('/')
   }
+
+  const branchDisplayName = "Uganda Branch"
 
   return (
     <div className="layout-wrapper">
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <div style={{ width: '32px', height: '32px', background: 'var(--accent-primary)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'white' }}>A</div>
-            Admin
+            <div style={{ width: '32px', height: '32px', background: 'var(--accent-primary)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', color: 'white' }}>B</div>
+            {branchDisplayName}
           </div>
         </div>
 
         <nav className="sidebar-nav">
-          <NavLink href="/admin/dashboard">
+          <NavLink href="/uganda/dashboard">
             <LayoutDashboard size={18} /> Dashboard
           </NavLink>
-          <NavLink href="/admin/users">
-            <Users size={18} /> Users
+          <NavLink href="/uganda/create">
+            <SendHorizontal size={18} /> Send Money
           </NavLink>
-          <NavLink href="/admin/transactions">
-            <Banknote size={18} /> Transactions
+          <NavLink href="/uganda/claim">
+            <Download size={18} /> Receive Money
           </NavLink>
-          <NavLink href="/admin/logs">
-            <ScrollText size={18} /> Logs
+          <NavLink href="/uganda/history">
+            <History size={18} /> History
           </NavLink>
         </nav>
 
         <div className="sidebar-footer">
           <div className="flex items-center justify-between mb-2">
             <div className="portal-badge">
-              <span></span> Admin Portal
+              <span></span> Branch Portal
             </div>
             <NotificationBell />
           </div>

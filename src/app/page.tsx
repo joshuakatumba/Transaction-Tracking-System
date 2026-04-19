@@ -23,7 +23,20 @@ export default async function Home() {
 
   if (profile?.role === 'branch_user') {
     if (profile.branch_id) {
-      redirect('/branch/dashboard')
+      const { data: branch } = await supabase
+        .from('branches')
+        .select('name')
+        .eq('id', profile.branch_id)
+        .single()
+      
+      const branchName = branch?.name?.toLowerCase() || ''
+      if (branchName.includes('uganda')) {
+        redirect('/uganda/dashboard')
+      } else if (branchName.includes('sudan')) {
+        redirect('/sudan/dashboard')
+      }
+      // Fallback
+      redirect('/denied')
     }
     redirect('/denied')
   }

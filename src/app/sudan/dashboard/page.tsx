@@ -23,13 +23,13 @@ export default async function BranchDashboard() {
         <div className="card stat-card">
           <h3>Transfers Sent</h3>
           <div className="value">{sentCount}</div>
-          <Link href="/branch/create" className="btn btn-primary mt-4 btn-block">New Transfer</Link>
+          <Link href="/sudan/create" className="btn btn-primary mt-4 btn-block">New Transfer</Link>
         </div>
         
         <div className="card stat-card">
           <h3>Transfers Received</h3>
           <div className="value text-success">{receivedCount}</div>
-          <Link href="/branch/claim" className="btn btn-success mt-4 btn-block">Process Claim</Link>
+          <Link href="/sudan/claim" className="btn btn-success mt-4 btn-block">Process Claim</Link>
         </div>
 
         <div className="card stat-card">

@@ -128,7 +128,7 @@ export default function BranchClaimTxPage() {
               <button type="button" onClick={() => setSuccessData(null)} className="btn btn-secondary btn-print">
                 Next Claim
               </button>
-              <Link href="/branch/history" className="btn btn-secondary">History</Link>
+              <Link href="/uganda/history" className="btn btn-secondary">History</Link>
             </div>
           </div>
         )}

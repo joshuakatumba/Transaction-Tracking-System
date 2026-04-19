@@ -233,9 +233,15 @@ p { color: var(--text-secondary); line-height: 1.6; }
 }
 
 .sidebar-link:hover, .sidebar-link.active {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(59, 130, 246, 0.1);
   color: var(--accent-primary);
 }
+
+.sidebar-link.active {
+  background: rgba(59, 130, 246, 0.15);
+  font-weight: 600;
+}
+
 
 .sidebar-footer {
   padding: 1.5rem;
@@ -374,4 +380,3 @@ p { color: var(--text-secondary); line-height: 1.6; }
     color: black;
   }
 }
-

@@ -6,9 +6,6 @@ import { revalidatePath } from 'next/cache'
 export async function fetchUsers() {
   const supabase = await createClient()
   
-  // Need users with email from auth.users theoretically, but auth.users isn't accessible securely via client usually 
-  // without admin API. So we need the service_role key to manage users or we store email in public.users. 
-  // Let's assume we fetch `public.users` along with their branch.
   const { data, error } = await supabase
     .from('users')
     .select(`
@@ -52,11 +49,12 @@ export async function updateUser(userId: string, targetRole: 'admin' | 'branch_u
   }
 
   // 2. Update user
+  // Allow branch assignment regardless of role if specified
   const { error: updateError } = await supabase
     .from('users')
     .update({
       role: targetRole,
-      branch_id: targetRole === 'admin' ? null : branchId
+      branch_id: branchId || null
     })
     .eq('id', userId)
 
@@ -132,7 +130,6 @@ export async function fetchBranches() {
   const { data, error } = await supabase
     .from('branches')
     .select('*')
-    .in('name', ['Sudan Branch', 'Uganda Branch'])
     .order('name')
   return { data, error }
 }
