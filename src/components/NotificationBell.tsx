@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { fetchNotifications, markAsRead, markAllAsRead } from '@/app/actions/notifications'
-import { Bell, X, CheckCheck, Trash2 } from 'lucide-react'
+import { Bell, X, CheckCheck, Trash2, Check } from 'lucide-react'
 
 export default function NotificationBell() {
   const [notifications, setNotifications] = useState<any[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [toast, setToast] = useState<any>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
@@ -28,6 +29,10 @@ export default function NotificationBell() {
         (payload) => {
           setNotifications((prev) => [payload.new, ...prev].slice(0, 20))
           setUnreadCount((prev) => prev + 1)
+          
+          // Show toast
+          setToast(payload.new)
+          setTimeout(() => setToast(null), 5000)
         }
       )
       .subscribe()
@@ -113,6 +118,24 @@ export default function NotificationBell() {
                 <p>No notifications yet</p>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Premium Layered Toast */}
+      {toast && (
+        <div className="notification-toast-wrapper">
+          <div className="notification-toast animate-slide-in">
+            <div className="toast-icon">
+              <Check size={20} strokeWidth={3} />
+            </div>
+            <div className="toast-body">
+              <div className="toast-title">{toast.title}</div>
+              <div className="toast-message">{toast.message}</div>
+            </div>
+            <button onClick={() => setToast(null)} className="toast-close">
+              <X size={18} />
+            </button>
           </div>
         </div>
       )}
@@ -239,14 +262,126 @@ export default function NotificationBell() {
           color: var(--text-secondary);
           line-height: 1.4;
         }
-        .empty-state {
-          padding: 3rem 1rem;
-          text-align: center;
-          color: var(--text-secondary);
-        }
         .empty-state p {
           margin: 0;
           font-size: 0.85rem;
+        }
+
+        /* Premium Stacked Toast Styles */
+        .notification-toast-wrapper {
+          position: fixed;
+          top: 2rem;
+          right: 2rem;
+          z-index: 10000;
+          perspective: 1000px;
+        }
+
+        .notification-toast {
+          position: relative;
+          width: 400px;
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 1.5rem;
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          box-shadow: 
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Stacked Layers Effect */
+        .notification-toast::before,
+        .notification-toast::after {
+          content: '';
+          position: absolute;
+          left: 12px;
+          right: 12px;
+          height: 100%;
+          background: #ffffff;
+          border-radius: 16px;
+          z-index: -1;
+          border: 1px solid rgba(0,0,0,0.05);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .notification-toast::before {
+          top: -8px;
+          transform: scale(0.96);
+          opacity: 0.8;
+          background: #f8fafc;
+        }
+
+        .notification-toast::after {
+          top: -16px;
+          transform: scale(0.92);
+          opacity: 0.4;
+          background: #f1f5f9;
+        }
+
+        .toast-icon {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, #10b981, #059669);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .toast-body {
+          flex: 1;
+          padding-top: 2px;
+        }
+
+        .toast-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #0f172a;
+          margin-bottom: 4px;
+        }
+
+        .toast-message {
+          font-size: 0.95rem;
+          color: #64748b;
+          line-height: 1.5;
+        }
+
+        .toast-close {
+          background: none;
+          border: none;
+          color: #94a3b8;
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 8px;
+          transition: all 0.2s;
+          margin-top: -4px;
+          margin-right: -4px;
+        }
+
+        .toast-close:hover {
+          background: #f1f5f9;
+          color: #0f172a;
+        }
+
+        @keyframes slideIn {
+          from { 
+            opacity: 0; 
+            transform: translateX(40px) translateY(-10px) rotate(2deg);
+          }
+          to { 
+            opacity: 1; 
+            transform: translateX(0) translateY(0) rotate(0deg);
+          }
+        }
+
+        .animate-slide-in {
+          animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
       `}</style>
     </div>

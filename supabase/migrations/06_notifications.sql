@@ -67,3 +67,52 @@ CREATE TRIGGER on_user_role_update_notify
     AFTER UPDATE OF role ON public.users
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_user_of_role_update();
+
+-- Function to notify of new transaction
+CREATE OR REPLACE FUNCTION public.notify_of_new_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Notify the creator (confirmation)
+    INSERT INTO public.notifications (user_id, type, title, message, metadata)
+    VALUES (NEW.created_by, 'TRANSACTION_CREATED', 'Money Sent Successfully', 
+            'Transaction code ' || NEW.code || ' for $' || NEW.amount || ' has been created.',
+            jsonb_build_object('transaction_id', NEW.id, 'code', NEW.code));
+
+    -- Notify Admins
+    INSERT INTO public.notifications (user_id, type, title, message, metadata)
+    SELECT id, 'ADMIN_TX_ALERT', 'New Transaction Alert', 
+           'A new transfer of $' || NEW.amount || ' was initiated at ' || (SELECT name FROM branches WHERE id = NEW.branch_origin) || '.',
+           jsonb_build_object('transaction_id', NEW.id, 'amount', NEW.amount)
+    FROM public.users
+    WHERE role = 'admin';
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger for new transaction
+CREATE TRIGGER on_transaction_created_notify
+    AFTER INSERT ON public.transactions
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_of_new_transaction();
+
+-- Function to notify when transaction is claimed
+CREATE OR REPLACE FUNCTION public.notify_of_claimed_transaction()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (OLD.status = 'PENDING' AND NEW.status = 'CLAIMED') THEN
+        -- Notify the original creator
+        INSERT INTO public.notifications (user_id, type, title, message, metadata)
+        VALUES (NEW.created_by, 'TRANSACTION_CLAIMED', 'Money Claimed', 
+                'The money sent with code ' || NEW.code || ' has been successfully picked up.',
+                jsonb_build_object('transaction_id', NEW.id, 'code', NEW.code));
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger for claimed transaction
+CREATE TRIGGER on_transaction_claimed_notify
+    AFTER UPDATE OF status ON public.transactions
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_of_claimed_transaction();
