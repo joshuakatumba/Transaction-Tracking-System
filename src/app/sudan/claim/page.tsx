@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { previewClaim, claimTransaction } from '@/app/actions/transactions'
 import Link from 'next/link'
+import { CheckCircle, Printer, RotateCcw, FileText } from 'lucide-react'
 
 interface TransactionData {
   id: string;
@@ -112,23 +113,46 @@ export default function BranchClaimTxPage() {
 
         {/* STEP 3: SUCCESS RECEIPT */}
         {successData && (
-          <div className="animate-fade-in p-4 text-center" style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--accent-success)', borderRadius: 'var(--border-radius)' }}>
-            <h3 className="text-success mb-2">Claim Successfully Processed!</h3>
-            <p className="mb-2">Release the following completely verified amount to the customer:</p>
-            <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem' }}>
-              ${Number(successData.amount).toLocaleString()}
+          <div className="animate-fade-in receipt-card">
+            <div className="receipt-header">
+              <div className="success-icon-wrapper">
+                <CheckCircle className="text-success" size={48} strokeWidth={1.5} />
+              </div>
+              <h3 className="text-success mb-1">Claim Successfully Processed!</h3>
+              <p className="text-secondary" style={{ fontSize: '0.9rem' }}>Official Transaction Receipt</p>
             </div>
             
-            <p className="text-secondary" style={{ fontSize: '0.85rem' }}>Transaction automatically securely logged.</p>
+            <div className="receipt-body">
+              <div className="receipt-row">
+                <span className="text-secondary">Amount Released</span>
+                <span className="receipt-amount">${Number(successData.amount).toLocaleString()}</span>
+              </div>
+              <div className="receipt-divider"></div>
+              <div className="receipt-row">
+                <span className="text-secondary">Transaction ID</span>
+                <span className="receipt-value" style={{ fontFamily: 'monospace' }}>{successData.id.slice(0,8).toUpperCase()}</span>
+              </div>
+              <div className="receipt-row">
+                <span className="text-secondary">Date & Time</span>
+                <span className="receipt-value">{new Date().toLocaleString()}</span>
+              </div>
+            </div>
 
-            <div className="mt-4 flex gap-4" style={{ justifyContent: 'center' }}>
-              <button type="button" onClick={() => window.print()} className="btn btn-success btn-print">
-                Print Final Receipt
-              </button>
-              <button type="button" onClick={() => setSuccessData(null)} className="btn btn-secondary btn-print">
-                Next Claim
-              </button>
-              <Link href="/sudan/history" className="btn btn-secondary">History</Link>
+            <div className="receipt-footer">
+              <p className="text-secondary mb-4" style={{ fontSize: '0.85rem' }}>
+                Transaction automatically and securely logged to the centralized ledger.
+              </p>
+              <div className="mt-4 flex gap-3" style={{ justifyContent: 'center' }}>
+                <button type="button" onClick={() => window.print()} className="btn btn-success btn-print" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyItems: 'center', justifyContent: 'center' }}>
+                  <Printer size={18} /> Print
+                </button>
+                <button type="button" onClick={() => setSuccessData(null)} className="btn btn-secondary btn-print" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyItems: 'center', justifyContent: 'center' }}>
+                  <RotateCcw size={18} /> Next
+                </button>
+                <Link href="/sudan/history" className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, justifyItems: 'center', justifyContent: 'center' }}>
+                  <FileText size={18} /> History
+                </Link>
+              </div>
             </div>
           </div>
         )}

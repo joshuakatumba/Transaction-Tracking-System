@@ -461,6 +461,86 @@ body.sidebar-open {
   animation: fadeIn 0.4s ease-out forwards;
 }
 
+/* Professional Receipt Card */
+.receipt-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 2.5rem 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.receipt-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-success));
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.success-icon-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(5, 150, 105, 0.1);
+  margin-bottom: 1.5rem;
+  animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.receipt-body {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+}
+
+.receipt-amount {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.receipt-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.receipt-divider {
+  height: 1px;
+  background: repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 4px, transparent 4px, transparent 8px);
+  margin: 0.5rem 0;
+}
+
+.receipt-footer {
+  text-align: center;
+}
+
 /* Minimal POS Print Styles */
 @media print {
   @page {
