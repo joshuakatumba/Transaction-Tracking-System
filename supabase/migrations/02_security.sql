@@ -38,6 +38,11 @@ CREATE POLICY "Branch users can view their branch transactions" ON public.transa
     )
 );
 
+CREATE POLICY "Branch users can view pending cross-branch transactions" ON public.transactions FOR SELECT USING (
+    (SELECT role FROM public.users WHERE id = auth.uid()) = 'branch_user' AND
+    status = 'PENDING'
+);
+
 CREATE POLICY "Branch users can update transactions to claim" ON public.transactions FOR UPDATE USING (
     (SELECT role FROM public.users WHERE id = auth.uid()) = 'branch_user'
 );
