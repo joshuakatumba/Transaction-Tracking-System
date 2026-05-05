@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "admin-system",
+    "sudan-system",
+    "uganda-system"
   ],
   "scripts": {
     "dev": "turbo dev",
